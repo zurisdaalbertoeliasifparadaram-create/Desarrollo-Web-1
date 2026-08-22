@@ -5,17 +5,20 @@ export type Department =
   | 'Operaciones'
   | 'Ventas'
 
-export type EmployeeStatus = 'Activo' | 'Permiso' | 'Inactivo'
+export type EmployeeStatus = 'active' | 'inactive' | 'on_leave'
 
-export type EmployeeRole = 'Administrador' | 'Gerente' | 'Empleado'
+export type EmployeeRole = 'employee' | 'hr' | 'admin'
 
 export interface Employee {
   id: number
   name: string
+  email: string
   position: string
   department: Department
+  salary: number
+  hireDate: string // formato ISO: 'YYYY-MM-DD'
   status: EmployeeStatus
   role: EmployeeRole
-  email: string
-  hireDate: string // formato ISO: 'YYYY-MM-DD'
+  phone?: string
+  avatarUrl?: string
 }
