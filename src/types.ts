@@ -36,7 +36,7 @@ export interface LoginCredentials {
   password: string
 }
 
-// DTOs usados por employeeStore, employeeService y los hooks de React Query
+// DTOs usados por employeeService y los hooks de TanStack Query
 export type CreateEmployeeDto = Omit<Employee, 'id'>
 export type UpdateEmployeeDto = Partial<CreateEmployeeDto>
 
