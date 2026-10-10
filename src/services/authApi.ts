@@ -4,7 +4,15 @@ import { useAuthStore } from '../store/authStore';
 import { notifyGlobalError } from '../utils/errorHandler';
 
 // URL base de API-RH (instancia en Cloud Run), sin /api/v1.
-const AUTH_BASE_URL = import.meta.env.VITE_AUTH_API_URL || '<API_BASE_URL_ASIGNADA>';
+const AUTH_BASE_URL: string = import.meta.env.VITE_AUTH_API_URL ?? '';
+
+// La URL es válida solo si es absoluta (http/https). Si falta, o se dejó el texto de
+// relleno de .env.example, el navegador la trataría como una ruta del propio sitio y
+// el servidor respondería con un confuso "405".
+export const isAuthApiConfigured = /^https?:\/\//.test(AUTH_BASE_URL);
+
+export const AUTH_API_NOT_CONFIGURED_MESSAGE =
+  'Falta configurar la URL de API-RH (VITE_AUTH_API_URL). Avisa al administrador del sitio.';
 
 export const authApiClient = axios.create({
   baseURL: AUTH_BASE_URL,
@@ -17,6 +25,12 @@ export const authApiClient = axios.create({
 // Adjunta el access token a las rutas que lo requieren (/auth/me, /auth/logout).
 // Login y refresh son públicas: todavía no hay token que enviar.
 authApiClient.interceptors.request.use((config) => {
+  // Falla rápido y con un mensaje claro, sin enviar la petición a ningún lado.
+  if (!isAuthApiConfigured) {
+    console.error('[Config]', AUTH_API_NOT_CONFIGURED_MESSAGE);
+    return Promise.reject(new Error(AUTH_API_NOT_CONFIGURED_MESSAGE));
+  }
+
   const authData = localStorage.getItem('auth-storage');
   if (authData) {
     try {

@@ -1,6 +1,6 @@
 # Mini Sistema de RRHH
 
-> **Sitio desplegado:** <PEGAR_AQUÍ_EL_ENLACE_DEL_SITIO>
+> **Sitio desplegado:** https://desarrollo-web-1.vercel.app/
 
 Aplicación web para la gestión de empleados. El listado y el CRUD de empleados
 se sirven desde una API local (JSON Server); la sesión (login, renovación del
@@ -68,6 +68,10 @@ La aplicación son dos piezas que se publican por separado:
    | --- | --- |
    | `VITE_AUTH_API_URL` | URL base de API-RH, sin `/api/v1` |
    | `VITE_API_URL` | URL pública de la API de empleados del paso 1 |
+
+   Vite lee estas variables al compilar: después de agregarlas o cambiarlas hay que
+   volver a desplegar (*Redeploy*). Si `VITE_AUTH_API_URL` falta o no empieza con
+   `http(s)://`, el login muestra "Falta configurar la URL de API-RH".
 
    El archivo `vercel.json` redirige todas las rutas a `index.html`, necesario para
    que React Router funcione al recargar o abrir un enlace directo (por ejemplo la
