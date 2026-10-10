@@ -1,19 +1,26 @@
 // src/layouts/Header.tsx
 import { Link, useLocation } from 'react-router-dom';
-import type { User } from '../types';
+import type { AuthUser, NavItem } from '../types';
+import { useHasRole } from '../components/RoleGuard';
 
 interface HeaderProps {
-  user?: User;
+  user?: AuthUser;
   onLogout?: () => void;
 }
 
-const navItems = [
-  { to: '/dashboard', label: 'Dashboard' },
-  { to: '/empleados', label: 'Empleados' },
+const navItems: NavItem[] = [
+  { path: '/dashboard', label: 'Dashboard', icon: '📊', allowedRoles: ['ADMIN', 'HR_MANAGER', 'EMPLOYEE'] },
+  { path: '/empleados', label: 'Empleados', icon: '🧑‍💼', allowedRoles: ['ADMIN', 'HR_MANAGER'] },
 ];
 
 function Header({ user, onLogout }: HeaderProps) {
   const { pathname } = useLocation();
+  const canManageEmployees = useHasRole(['ADMIN', 'HR_MANAGER']);
+
+  // Sección de UI oculta según rol: EMPLOYEE nunca ve el link a Empleados
+  const visibleNavItems = navItems.filter(
+    item => item.path !== '/empleados' || canManageEmployees
+  );
 
   return (
     <header className="bg-brand-800 text-white shadow-md">
@@ -27,19 +34,19 @@ function Header({ user, onLogout }: HeaderProps) {
         {/* Navegación */}
         {user && (
           <nav className="hidden sm:flex items-center gap-1">
-            {navItems.map(item => (
+            {visibleNavItems.map(item => (
               <Link
-                key={item.to}
-                to={item.to}
+                key={item.path}
+                to={item.path}
                 className={`
                   px-3 py-1.5 rounded-md text-sm font-medium transition-colors
-                  ${pathname.startsWith(item.to)
+                  ${pathname.startsWith(item.path)
                     ? 'bg-white/20 text-white'
                     : 'text-white/75 hover:text-white hover:bg-white/10'
                   }
                 `}
               >
-                {item.label}
+                {item.icon} {item.label}
               </Link>
             ))}
           </nav>
@@ -49,18 +56,15 @@ function Header({ user, onLogout }: HeaderProps) {
         {user && (
           <div className="flex items-center gap-3">
             <span className="hidden md:block text-sm text-white/80">
-              {user.name}
+              {user.firstName} {user.lastName}
             </span>
-            <span className="text-xs bg-blue-500 px-2 py-0.5 rounded-full
-                             uppercase font-medium">
-              {user.role}
+            <span className="text-xs bg-blue-500 px-2 py-0.5 rounded-full uppercase font-medium">
+              {user.role.name}
             </span>
             {onLogout && (
               <button
                 onClick={onLogout}
-                className="text-sm text-white/75 hover:text-white border
-                           border-white/30 hover:border-white/60
-                           px-3 py-1.5 rounded-md transition-colors"
+                className="text-sm text-white/75 hover:text-white border border-white/30 hover:border-white/60 px-3 py-1.5 rounded-md transition-colors"
               >
                 Salir
               </button>

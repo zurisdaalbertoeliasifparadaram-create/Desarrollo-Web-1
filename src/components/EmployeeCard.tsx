@@ -28,9 +28,7 @@ function EmployeeCard({ employee, onSelect, onToggleStatus }: EmployeeCardProps)
       `}
     >
       <div className="flex items-center gap-3">
-        <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center
-                        justify-center overflow-hidden text-blue-700
-                        font-semibold text-lg flex-shrink-0">
+        <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center overflow-hidden text-blue-700 font-semibold text-lg flex-shrink-0">
           {avatarUrl
             ? <img src={avatarUrl} alt={`Avatar de ${name}`} className="w-full h-full object-cover" />
             : name.charAt(0).toUpperCase()
@@ -43,8 +41,7 @@ function EmployeeCard({ employee, onSelect, onToggleStatus }: EmployeeCardProps)
       </div>
 
       <div className="mt-4 flex items-center justify-between gap-2">
-        <span className="text-xs bg-blue-50 text-blue-700 px-2.5 py-1
-                         rounded-full font-medium truncate">
+        <span className="text-xs bg-blue-50 text-blue-700 px-2.5 py-1 rounded-full font-medium truncate">
           {department}
         </span>
         <span

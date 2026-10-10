@@ -1,6 +1,7 @@
 // src/pages/EmployeeDetailPage.tsx
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEmployee } from '../hooks/useEmployees';
+import { extractErrorMessage } from '../utils/errorHandler';
 
 const statusLabels: Record<string, string> = {
   active: 'Activo',
@@ -36,7 +37,8 @@ function formatDate(dateStr: string) {
 function EmployeeDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const employeeId = id ? Number(id) : null;
+  const parsedId = id ? Number(id) : NaN;
+  const employeeId = Number.isInteger(parsedId) && parsedId > 0 ? parsedId : null;
 
   const { data: employee, isLoading, isError, error } = useEmployee(employeeId);
 
@@ -50,7 +52,7 @@ function EmployeeDetailPage() {
         ← Volver
       </button>
 
-      {isLoading && (
+      {employeeId !== null && isLoading && (
         <div className="flex items-center justify-center py-16 text-slate-400">
           <div className="animate-spin w-8 h-8 border-4 border-blue-200 border-t-blue-600 rounded-full mr-3" />
           <span>Cargando empleado...</span>
@@ -61,8 +63,14 @@ function EmployeeDetailPage() {
         <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
           <p className="text-red-700 font-medium">Error al cargar el empleado</p>
           <p className="text-red-500 text-sm mt-1">
-            {(error as Error)?.message || 'Error desconocido'}
+            {extractErrorMessage(error)}
           </p>
+        </div>
+      )}
+
+      {employeeId === null && (
+        <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-6 text-center">
+          <p className="text-yellow-800 font-medium">Identificador de empleado inválido</p>
         </div>
       )}
 
