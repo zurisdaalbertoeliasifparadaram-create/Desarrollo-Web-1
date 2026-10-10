@@ -1,7 +1,5 @@
 # Mini Sistema de RRHH
 
-> **Sitio desplegado:** https://desarrollo-web-1.vercel.app/
-
 Aplicación web para la gestión de empleados. El listado y el CRUD de empleados
 se sirven desde una API local (JSON Server); la sesión (login, renovación del
 token y roles) se resuelve contra una instancia de API-RH.
@@ -51,31 +49,7 @@ npm run dev        # aplicación en http://localhost:5173
 | `npm run build` | Compila TypeScript y genera el build de producción. |
 | `npm run lint` | Ejecuta ESLint sobre todo el proyecto. |
 | `npm run preview` | Sirve el build de producción de forma local. |
-| `npm run mock-api` | Levanta JSON Server con `db.json` (desarrollo, con `--watch`). |
-| `npm run start:mock` | Levanta JSON Server para producción (lee el puerto de `PORT`). |
-
-## Despliegue
-
-La aplicación son dos piezas que se publican por separado:
-
-1. **API de empleados (JSON Server)**, por ejemplo en [Render](https://render.com) como *Web Service*:
-   - Build command: `npm install`
-   - Start command: `npm run start:mock`
-2. **Frontend (Vite)**, por ejemplo en [Vercel](https://vercel.com) importando este repositorio.
-   Variables de entorno:
-
-   | Variable | Valor |
-   | --- | --- |
-   | `VITE_AUTH_API_URL` | URL base de API-RH, sin `/api/v1` |
-   | `VITE_API_URL` | URL pública de la API de empleados del paso 1 |
-
-   Vite lee estas variables al compilar: después de agregarlas o cambiarlas hay que
-   volver a desplegar (*Redeploy*). Si `VITE_AUTH_API_URL` falta o no empieza con
-   `http(s)://`, el login muestra "Falta configurar la URL de API-RH".
-
-   El archivo `vercel.json` redirige todas las rutas a `index.html`, necesario para
-   que React Router funcione al recargar o abrir un enlace directo (por ejemplo la
-   página 404).
+| `npm run mock-api` | Levanta JSON Server con `db.json`. |
 
 ## Estructura
 
